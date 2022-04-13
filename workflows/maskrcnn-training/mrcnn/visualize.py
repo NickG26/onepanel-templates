@@ -483,10 +483,10 @@ def display_weight_stats(model):
     layers = model.get_trainable_layers()
     table = [["WEIGHT NAME", "SHAPE", "MIN", "MAX", "STD"]]
     for l in layers:
-        total_weights += 1
         weight_values = l.get_weights()  # list of Numpy arrays
         weight_tensors = l.weights  # list of TF tensors
         for i, w in enumerate(weight_values):
+            total_weights += 1
             weight_name = weight_tensors[i].name
             # Detect problematic layers. Exclude biases of conv layers.
             alert = ""

@@ -347,7 +347,7 @@ def train(params, model, config, train_dataset, val_dataset, output_folder, use_
         print("Third stage skipped, {} sent as num of third stage epochs".format(params['stage_3_epochs']))
 
     # Extract trained model
-    print("Training complete\n Extracting trained model")
+    print("Training complete\n Extracting trained model: saving the model and the weights.")
     extract_model(train_dataset, output_folder, config, params, model)
     print("Workflow complete!")
 
@@ -470,6 +470,9 @@ def create_model(command, config, logs_dir, selected_model, ref_model_path=''):
 
 
 def extract_model(train_dataset, output_dir, config, params, model):
+    path_saved = os.path.join(output_dir, "model")
+    print(f"Trained model is being saved to {path_saved}")
+    model.keras_model.save(path_saved)
     generate_csv(
         os.path.join(train_dataset, "annotations/instances_default.json"), 
         os.path.join(output_dir, "model")
@@ -478,9 +481,6 @@ def extract_model(train_dataset, output_dir, config, params, model):
         os.path.join(output_dir, "checkpoints/mask_rcnn_{}_{:04d}.h5".format(config.NAME.lower(), int(params['stage_3_epochs']))),
         os.path.join(output_dir, "model/onepanel_trained_model.h5")
     )
-    path_saved = os.path.join(output_dir, "model")
-    print(f"Trained model is being saved to {path_saved}")
-    model.keras_model.save(path_saved)
 
 def get_augmentations(params):
     # Image Augmentation
