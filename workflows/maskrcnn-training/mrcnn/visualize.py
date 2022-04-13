@@ -476,9 +476,14 @@ def display_weight_stats(model):
     """Scans all the weights in the model and returns a list of tuples
     that contain stats about each weight.
     """
+    total_weights = 0
+    dead_weights = 0
+    overflow_weights = 0
+
     layers = model.get_trainable_layers()
     table = [["WEIGHT NAME", "SHAPE", "MIN", "MAX", "STD"]]
     for l in layers:
+        total_weights += 1
         weight_values = l.get_weights()  # list of Numpy arrays
         weight_tensors = l.weights  # list of TF tensors
         for i, w in enumerate(weight_values):
@@ -487,8 +492,10 @@ def display_weight_stats(model):
             alert = ""
             if w.min() == w.max() and not (l.__class__.__name__ == "Conv2D" and i == 1):
                 alert += "<span style='color:red'>*** dead?</span>"
+                dead_weights += 1
             if np.abs(w.min()) > 1000 or np.abs(w.max()) > 1000:
                 alert += "<span style='color:red'>*** Overflow?</span>"
+                overflow_weights += 1
             # Add row
             table.append([
                 weight_name + alert,
@@ -497,4 +504,5 @@ def display_weight_stats(model):
                 "{:+10.4f}".format(w.max()),
                 "{:+9.4f}".format(w.std()),
             ])
+    print(f"Total weights: {total_weights}\nDead weights: {dead_weights}\nOverflow weights: {overflow_weights}\n")
     display_table(table)
