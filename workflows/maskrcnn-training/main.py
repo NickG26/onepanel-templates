@@ -478,7 +478,7 @@ def extract_model(train_dataset, output_dir, config, params, model):
         os.path.join(output_dir, "checkpoints/mask_rcnn_{}_{:04d}.h5".format(config.NAME.lower(), int(params['stage_3_epochs']))),
         os.path.join(output_dir, "model/onepanel_trained_model.h5")
     )
-    model.save(os.path.join(output_dir, "model")
+    model.keras_model.save(os.path.join(output_dir, "model")
 
 def get_augmentations(params):
     # Image Augmentation
