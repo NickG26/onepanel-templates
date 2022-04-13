@@ -348,7 +348,7 @@ def train(params, model, config, train_dataset, val_dataset, output_folder, use_
 
     # Extract trained model
     print("Training complete\n Extracting trained model")
-    extract_model(train_dataset, output_folder, config, params)
+    extract_model(train_dataset, output_folder, config, params, model)
     print("Workflow complete!")
 
 
@@ -469,7 +469,7 @@ def create_model(command, config, logs_dir, selected_model, ref_model_path=''):
     return model
 
 
-def extract_model(train_dataset, output_dir, config, params):
+def extract_model(train_dataset, output_dir, config, params, model):
     generate_csv(
         os.path.join(train_dataset, "annotations/instances_default.json"), 
         os.path.join(output_dir, "model")
@@ -478,6 +478,7 @@ def extract_model(train_dataset, output_dir, config, params):
         os.path.join(output_dir, "checkpoints/mask_rcnn_{}_{:04d}.h5".format(config.NAME.lower(), int(params['stage_3_epochs']))),
         os.path.join(output_dir, "model/onepanel_trained_model.h5")
     )
+    model.save(os.path.join(output_dir, "model")
 
 def get_augmentations(params):
     # Image Augmentation
